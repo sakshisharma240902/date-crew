@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pre-send check · The Date Crew prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E7E3D6;--surf:#FBFAF6;--ink:#2B2218;--mut:#6B6254;--line:#D3CDBB;--warn:#A52A22;--warnbg:#F6E3DF;--flag:#85570A;--flagbg:#F5EBD0;--unver:#6B6254;--unverbg:#E9E5D8;--clear:#2C6A49;--clearbg:#DDEBDD;--acc:#2E4338;--accfg:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14110D;--surf:#1F1B15;--ink:#F0E9DA;--mut:#A89F8D;--line:#3A342A;--warn:#FF9A8F;--warnbg:#3B221F;--flag:#E8C070;--flagbg:#382D15;--unver:#A89F8D;--unverbg:#2A261E;--clear:#7FD3A4;--clearbg:#18301F;--acc:#DCC59B;--accfg:#1F1A12}}
+:root[data-theme="dark"]{--bg:#14110D;--surf:#1F1B15;--ink:#F0E9DA;--mut:#A89F8D;--line:#3A342A;--warn:#FF9A8F;--warnbg:#3B221F;--flag:#E8C070;--flagbg:#382D15;--unver:#A89F8D;--unverbg:#2A261E;--clear:#7FD3A4;--clearbg:#18301F;--acc:#DCC59B;--accfg:#1F1A12}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-family:"Playfair Display",Georgia,serif;font-size:40px;line-height:1.12;font-weight:500;letter-spacing:-.01em;margin:0 0 10px;color:#DCC59B}
+h2{font-family:"Playfair Display",Georgia,serif;font-size:22px;font-weight:600;margin:28px 0 8px}
+.sub{margin:0;max-width:60ch;color:#EDE6D6}
+.bar{background:var(--surf);border-bottom:1px solid var(--line);padding:14px max(18px,calc((100% - 760px)/2));display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.brand{font-family:"Playfair Display",Georgia,serif;font-size:20px;font-weight:600}.tag{color:var(--mut);font-size:13px}
+.hero{background:#15110D;padding:36px max(18px,calc((100% - 760px)/2)) 40px}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.tab{background:var(--surf);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:8px 20px;font-weight:600}
+.tab[aria-pressed="true"]{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{border:1px solid var(--line);border-radius:6px;padding:3px 9px;font-size:13px;background:var(--surf)}
+.chip.h{border-color:var(--acc);color:var(--acc);font-weight:700}
+.note{color:var(--mut);font-size:13px;margin:4px 0}
+.sum{display:flex;gap:16px;flex-wrap:wrap;margin:16px 0 4px;font-weight:700}
+.card{background:var(--surf);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:10px;padding:14px 16px;margin:12px 0}
+.warn{--c:var(--warn);--cb:var(--warnbg)}.flag{--c:var(--flag);--cb:var(--flagbg)}.unver{--c:var(--unver);--cb:var(--unverbg)}.clear{--c:var(--clear);--cb:var(--clearbg)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.name{font-family:"Playfair Display",Georgia,serif;font-size:21px;font-weight:600}.meta{color:var(--mut);font-size:13px}
+.score{font-family:"Playfair Display",Georgia,serif;font-size:26px;font-weight:600;text-align:right;line-height:1}.score small{display:block;font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:500;color:var(--mut);margin-top:3px}
+.banner{display:inline-block;margin:10px 0 6px;padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;background:var(--cb);color:var(--c)}
+ul{list-style:none;margin:6px 0;padding:0}
+li{padding:5px 0;font-size:14px;border-top:1px solid var(--line)}
+li b{display:inline-block;min-width:104px;font-size:12px;color:var(--c)}
+li.warn b{--c:var(--warn)}li.flag b{--c:var(--flag)}li.unver b{--c:var(--unver)}li.pass b{--c:var(--clear)}
+details{margin-top:4px;font-size:13px;color:var(--mut)}summary{cursor:pointer}
+.act{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{background:var(--acc);color:var(--accfg);border:0;border-radius:999px;padding:10px 22px;font-weight:600}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.sent{background:var(--clearbg);color:var(--clear)}
+select{font:inherit;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surf);color:var(--ink);max-width:100%}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mut);font-weight:700}
+</style></head>
+<body><header class="bar"><span class="brand">The Date Crew</span><span class="tag">Matchmaker tools</span></header>
+<section class="hero"><h1>Check before you send</h1>
+<p class="sub">Pick a client. Each candidate is checked against what the client asked for, and what the candidate asked for, before the email goes out.</p></section>
+<main>
+<div class="tabs" id="tabs"></div>
+<div id="app"></div>
+<h2>Send log</h2>
+<div class="tw"><table><thead><tr><th>Time</th><th>Client ← Candidate</th><th>Check result</th><th>Override reason</th></tr></thead><tbody id="log"><tr><td colspan="4" class="note">Nothing sent yet.</td></tr></tbody></table></div>
+<p class="note">Mock data. Fields marked “read from bio” stand in for the LLM extraction step; here they are hard-coded.</p>
+</main>
+<script>
+const EDU=['','Bachelor’s','Master’s','Doctorate'];
+const L={age:'age',height:'height',city:'city',edu:'education',smoking:'smoking',children:'children',diet:'diet'};
+const HARD=['smoking','children'];
+const REASONS=['Client asked to see this profile','Client’s preference looks outdated','Profile data looks wrong','Other'];
+const CL=[
+{name:'Ananya',p:{age:29,height:162,city:'Delhi',edu:2,smoking:'no',children:'yes',diet:'veg'},w:{age:[29,35],height:[170,190],city:['Delhi','Gurgaon','Noida'],edu:1,smoking:'no',children:'yes'},hard:HARD,cands:[
+{name:'Vikram',p:{age:33,height:178,city:'Delhi',edu:2,smoking:'no',children:'yes',diet:'nonveg'},w:{age:[26,32],smoking:'no',children:'yes'}},
+{name:'Karan',p:{age:31,height:182,city:'Gurgaon',edu:1,smoking:'yes',children:'yes',diet:'nonveg'},w:{age:[25,31],children:'yes'}},
+{name:'Aditya',p:{age:36,height:168,city:'Noida',edu:1,smoking:'no',children:'no',diet:'veg'},w:{age:[28,34],smoking:'no'}},
+{name:'Siddharth',p:{age:30,height:176,city:'Bangalore',edu:2,smoking:'no',children:null,diet:'nonveg'},w:{age:[24,28],smoking:'no'}}]},
+{name:'Rohan',p:{age:32,height:178,city:'Mumbai',edu:2,smoking:'no',children:'open',diet:'nonveg'},w:{age:[27,32],height:[155,170],city:['Mumbai','Pune'],edu:1,smoking:'no',children:'yes',diet:'veg'},hard:['smoking','children','diet'],cands:[
+{name:'Isha',p:{age:28,height:165,city:'Mumbai',edu:2,smoking:'no',children:'yes',diet:'veg'},w:{age:[30,36],smoking:'no'}},
+{name:'Tanvi',p:{age:30,height:172,city:'Pune',edu:1,smoking:'no',children:'yes',diet:'nonveg'},w:{age:[30,36],children:'yes'}},
+{name:'Priya',p:{age:26,height:160,city:'Mumbai',edu:1,smoking:'social',children:'yes',diet:'veg'},w:{age:[28,34],smoking:'no'}},
+{name:'Kavya',p:{age:29,height:158,city:'Thane',edu:2,smoking:'no',children:'yes',diet:null},via:{children:'bio'},w:{age:[29,35]}}]}];
+function show(k,v){if(v==null)return 'not on profile';if(k==='height')return v+' cm';if(k==='edu')return EDU[v];
+if(k==='smoking')return{no:'non-smoker',yes:'smokes',social:'smokes socially'}[v];
+if(k==='children')return{yes:'wants children',no:'doesn’t want children',open:'open to children'}[v];
+if(k==='diet')return{veg:'vegetarian',nonveg:'non-vegetarian'}[v];return String(v)}
+function want(k,w){if(k==='age'||k==='height')return w[0]+'–'+w[1]+(k==='height'?' cm':'');if(k==='city')return w.join(', ');
+if(k==='edu')return EDU[w]+' or higher';if(k==='smoking')return 'non-smoker';if(k==='children')return w==='yes'?'wants children':'doesn’t want children';return 'vegetarian'}
+function test(k,w,v){if(v==null)return null;if(k==='age'||k==='height')return v>=w[0]&&v<=w[1];if(k==='city')return w.includes(v);
+if(k==='edu')return v>=w;if(k==='smoking')return v==='no';if(k==='children')return v==='open'||v===w;return v===w}
+function chk(a,b){const hl=a.hard||HARD;return Object.keys(a.w).map(k=>{const hard=hl.includes(k),r=test(k,a.w[k],b.p[k]);
+return{k,hard,st:r===null?'unver':r?'pass':hard?'warn':'flag',
+txt:a.name+'’s '+L[k]+' preference ('+want(k,a.w[k])+') · '+b.name+': '+show(k,b.p[k])+(b.via&&b.via[k]&&b.p[k]!=null?' (read from bio)':'')}})}
+function ev(c,x){const ch=chk(c,x).concat(chk(x,c));let pw=0,fw=0;
+ch.forEach(o=>{const w=o.hard?2:1;if(o.st==='pass')pw+=w;else if(o.st!=='unver')fw+=w});
+const has=s=>ch.some(o=>o.st===s&&(s!=='unver'||o.hard));
+return{ch,v:has('warn')?'warn':has('unver')?'unver':has('flag')?'flag':'clear',score:pw+fw?Math.round(100*pw/(pw+fw)):null}}
+const VT={warn:['Warning','Breaks a must-have preference'],unver:['Can’t verify','A must-have is missing from the profile'],flag:['Flag','Misses a soft preference'],clear:['Clear to send','No conflicts found']};
+const BL={warn:'Must-have broken',flag:'Soft preference',unver:'Not on profile',pass:'Met'};
+let ci=0,ov=null,sent={},log=[];
+function render(){
+document.getElementById('tabs').innerHTML=CL.map((c,i)=>`<button class="tab" aria-pressed="${i===ci}" onclick="pick(${i})">${c.name}</button>`).join('');
+const c=CL[ci],hl=c.hard||HARD,evs=c.cands.map(x=>ev(c,x)),cnt=v=>evs.filter(e=>e.v===v).length;
+let h=`<p class="note">${c.name} is ${c.p.age}, ${c.p.city}. Must-have preferences (outlined) stop a send until you give a reason. The rest show as flags.</p><div class="chips">`+
+Object.keys(c.w).map(k=>`<span class="chip${hl.includes(k)?' h':''}">${L[k][0].toUpperCase()+L[k].slice(1)}: ${want(k,c.w[k])}${hl.includes(k)?' · must-have':''}</span>`).join('')+'</div>';
+h+=`<div class="sum"><span style="color:var(--warn)">${cnt('warn')} warning</span><span style="color:var(--unver)">${cnt('unver')} can’t verify</span><span style="color:var(--flag)">${cnt('flag')} flag</span><span style="color:var(--clear)">${cnt('clear')} clear</span></div>`;
+c.cands.forEach((x,i)=>{const e=evs[i],key=c.name+'|'+x.name,order={warn:0,unver:1,flag:2,pass:3};
+const iss=e.ch.filter(o=>o.st!=='pass'&&(o.st!=='unver'||o.hard||true)).sort((a,b)=>order[a.st]-order[b.st]),ok=e.ch.filter(o=>o.st==='pass');
+h+=`<section class="card ${e.v}"><div class="top"><div><div class="name">${x.name}</div><div class="meta">${x.p.age} · ${x.p.city} · ${show('height',x.p.height)} · ${show('edu',x.p.edu)}</div></div><div class="score">${e.score===null?'–':e.score+'%'}<small>of checkable preferences</small></div></div>`+
+`<div class="banner">${VT[e.v][0]}: ${VT[e.v][1].toLowerCase()}</div>`+
+(iss.length?'<ul>'+iss.map(o=>`<li class="${o.st}"><b>${BL[o.st]}</b>${o.txt}</li>`).join('')+'</ul>':'')+
+(ok.length?`<details><summary>${ok.length} checks met</summary><ul>${ok.map(o=>`<li class="pass"><b>${BL.pass}</b>${o.txt}</li>`).join('')}</ul></details>`:'')+
+`<div class="act">`+(sent[key]?'<button class="btn sent" disabled>Sent</button>':
+ov===key?`<select aria-label="Override reason" onchange="this.nextElementSibling.disabled=!this.value"><option value="">Why are you sending this?</option>${REASONS.map(r=>`<option>${r}</option>`).join('')}</select><button class="btn" disabled onclick="go('${key}',${i},this.previousElementSibling.value)">Send anyway</button><button class="tab" onclick="ov=null;render()">Cancel</button>`:
+`<button class="btn" onclick="send('${key}',${i})">${e.v==='warn'?'Send with a reason':'Send profile'}</button>`)+`</div></section>`});
+document.getElementById('app').innerHTML=h}
+function pick(i){ci=i;ov=null;render()}
+function send(key,i){const e=ev(CL[ci],CL[ci].cands[i]);if(e.v==='warn'){ov=key;render()}else go(key,i,'—')}
+function go(key,i,reason){const c=CL[ci],x=c.cands[i],e=ev(c,x);sent[key]=true;ov=null;
+log.unshift({t:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),who:c.name+' ← '+x.name,v:VT[e.v][0],r:reason});
+document.getElementById('log').innerHTML=log.map(l=>`<tr><td>${l.t}</td><td>${l.who}</td><td>${l.v}</td><td>${l.r}</td></tr>`).join('');render()}
+render();
+</script></body></html>
